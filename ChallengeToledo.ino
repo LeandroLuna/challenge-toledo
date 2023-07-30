@@ -18,7 +18,7 @@ const int pinGreenLed = 5;
 #define TRIGGER_PIN 12
 #define ECHO_PIN 11
 #define MAX_DISTANCE 400
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Obj sonar (ultrassonic) instance
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -52,7 +52,7 @@ void setup() {
 void loop() {
   int potentiometerValue = analogRead(A0); // Read potentiometer value. 0-750 using 3.3V
   int buttonPressed = digitalRead(pinButton);
-  int isGateOpen = false;
+  bool isGateOpen = false;
 
   if(buttonPressed == LOW){ // Button was pressed
     servo.write(90); // Open gate
@@ -64,6 +64,12 @@ void loop() {
     digitalWrite(pinRedLed, HIGH); // Red ON
     digitalWrite(pinGreenLed, LOW);
   }
+
+  Serial.print(potentiometerValue);
+  Serial.print(" ");
+  Serial.print(isGateOpen);
+  Serial.println(); // Move to next line to print out new values
+  Serial.flush(); // Clear buffer
 
   int distanceValue;
   distanceValue = sonar.ping_cm();
