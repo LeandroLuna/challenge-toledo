@@ -1,6 +1,6 @@
 # Challenge Toledo (2023)
 
-![Representação Challenge Toledo](https://www.insper.edu.br/wp-content/uploads/2022/05/Digital-twins.jpg)
+![Representação de DigitaL Twins para o Challenge Toledo](./DigitalTwins.jpg)
 
 ## Descrição do Projeto
 
