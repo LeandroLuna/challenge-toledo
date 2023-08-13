@@ -1,6 +1,6 @@
 # Challenge Toledo (2023)
 
-![Representação do Unreal Engine para o Challenge Toledo](./PrototipoUnrealEngine.jpg)
+![Representação do Unreal Engine para o Challenge Toledo](./PrototipoUnrealEngine.jpeg)
 
 ## Descrição do Projeto
 
