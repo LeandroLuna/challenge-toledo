@@ -1,4 +1,9 @@
+// Geral
+#include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+// Sensors
 #include <NewPing.h> // Ultrassonic Sensor
 #include <ESP32Servo.h> // Lib motor 
 
@@ -45,6 +50,13 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // Obj sonar (ultrassonic) i
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+// Main Func Variables
+unsigned long frontGateTimer = 0; // Timer for front gate
+unsigned long backGateTimer = 0;  // Timer for back gate
+bool isFrontGateOpen = false;
+bool isBackGateOpen = false;
+bool publishedAfterFrontGate = false;
+
 void connectAWS()
 {
   WiFi.mode(WIFI_STA);
@@ -89,12 +101,13 @@ void connectAWS()
   Serial.println("AWS IoT Connected!");
 }
  
-void publishMessage(int potentiometer, int distance, bool gateStatus)
+void publishMessage(int potentiometer, double truckId)
 {
   StaticJsonDocument<200> doc;
   doc["potentiometer"] = potentiometer;
-  doc["distance"] = distance;
-  doc["isGateOpen"] = gateStatus;
+  doc["truck_id"] = truckId;
+  // doc["distance"] = distance;
+  // doc["isGateOpen"] = gateStatus;
   char jsonBuffer[512];
   serializeJson(doc, jsonBuffer); // print to client
  
@@ -115,6 +128,8 @@ void messageHandler(char* topic, byte* payload, unsigned int length)
 void setup()
 {
   Serial.begin(115200);
+  srand(time(NULL));
+
   servo.attach(pinMotor); // Connect Servo obj instante to digital output 13
   servo.write(0); // Initial position
   pinMode(pinButton, INPUT_PULLUP); // Define button pin read mode using internal Arduino resistor
@@ -134,41 +149,54 @@ void setup()
   connectAWS();
   delay(2000); // Pause for 2 seconds
 }
- 
+
 void loop()
 {
   int potentiometerValue = analogRead(pinPotentiometer);
   int isButtonPressed = digitalRead(pinButton);
-  bool isGateOpen = false;
-  
-  if(isButtonPressed == LOW){ // Button was pressed
+  int distanceValue;
+  distanceValue = sonar.ping_cm();
+  unsigned long currentTime = millis();
+
+  if(digitalRead(pinButton) == LOW && !isFrontGateOpen){ // Button was pressed
+    isFrontGateOpen = true;
+    frontGateTimer = currentTime;
+    publishedAfterFrontGate = false;
+  } 
+
+  if (isFrontGateOpen && !isBackGateOpen && (currentTime - frontGateTimer) >= 10000) {
+    isBackGateOpen = true;
+    backGateTimer = currentTime;
+    isFrontGateOpen = false;
+  } else if (isBackGateOpen && (currentTime - backGateTimer) >= 10000) {
+    isBackGateOpen = false; // Reset isBackGateOpen after 10 seconds
+    publishedAfterFrontGate = false;
+  }
+
+  if (isBackGateOpen && !publishedAfterFrontGate) {
+    double truckIdentifier = generateRandomNumber(1, 2);
+    publishMessage(potentiometerValue, truckIdentifier);
+    publishedAfterFrontGate = true;
+  }
+
+  if(isFrontGateOpen){
     servo.write(90); // Open gate
     digitalWrite(pinGreenLed, HIGH); // Green ON
     digitalWrite(pinRedLed, LOW);
-    isGateOpen = true;
   } else {
     servo.write(0);
     digitalWrite(pinRedLed, HIGH); // Red ON
     digitalWrite(pinGreenLed, LOW);
   }
 
-  Serial.print(potentiometerValue);
-  Serial.print(" ");
-  Serial.print(isGateOpen);
-  Serial.println(); // Move to next line to print out new values
-  Serial.flush(); // Clear buffer
+  sendSerialData(potentiometerValue, isFrontGateOpen, isBackGateOpen);
 
-  int distanceValue;
-  distanceValue = sonar.ping_cm();
-
-  setDisplayText(potentiometerValue, distanceValue, isGateOpen);
-  publishMessage(potentiometerValue, distanceValue, isGateOpen);
+  setDisplayText(potentiometerValue, distanceValue, isFrontGateOpen, isBackGateOpen);
   client.loop();
-
-	isGateOpen ? delay(10000) : delay(50);
 }
 
-void setDisplayText(int potentiometer, int distance, bool gateStatus) {
+
+void setDisplayText(int potentiometer, int distance, bool frontGateStatus, bool backGateStatus) {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -180,7 +208,27 @@ void setDisplayText(int potentiometer, int distance, bool gateStatus) {
   display.print("Distance: " + String(distance) + "cm"); 
   
   display.setCursor(0, 24);
-  display.print(gateStatus ? "Gate state: open" : "Gate state: closed" ); 
+  if(frontGateStatus){
+    display.print("F.G. state: open"); 
+  } else if (backGateStatus){
+    display.print("B.G. state: open"); 
+  } else {
+    display.print("Both gates closed"); 
+  }
 
   display.display();
+}
+
+void sendSerialData(int potentiometer, bool frontGate, bool backGate){
+  Serial.print(potentiometer);
+  Serial.print(" ");
+  Serial.print(frontGate);
+  Serial.print(" ");
+  Serial.print(backGate);
+  Serial.println(); // Move to next line to print out new values
+  Serial.flush(); // Clear buffer
+}
+
+int generateRandomNumber(int minValue, int maxValue) {
+  return rand() % (maxValue - minValue + 1) + minValue;
 }
