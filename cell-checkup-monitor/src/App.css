@@ -1,0 +1,8 @@
+h1, h2 {
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    margin: 2em 0 1em 0;
+}
