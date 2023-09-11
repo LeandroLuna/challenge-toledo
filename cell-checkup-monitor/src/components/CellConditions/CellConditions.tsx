@@ -1,4 +1,3 @@
-import React from 'react';
 import BatteryAlertIcon from '@mui/icons-material/BatteryAlert';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import './CellConditions.css';

@@ -1,6 +1,5 @@
 import './App.css'
 import CellTable from './components/CellTable/CellTable.tsx'
-import React from 'react'
 import CellConditions from './components/CellConditions/CellConditions.tsx';
 
 function App() {
