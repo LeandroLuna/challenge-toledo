@@ -58,7 +58,7 @@ D1EpScH/ywesbHQxOUYNvIRcJtRvQ78Pjz7kSZ1omdZFzPZ8H36cXsre6nfasw==
  
 )KEY";
  
-// Device Private Key                                               //change this
+// Device Private Key                                               
 static const char AWS_CERT_PRIVATE[] PROGMEM = R"KEY(
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAqNhSqI4L909Q0/rgo1PYfLdT674lQMogQgiMBoUQu2OADXr7
