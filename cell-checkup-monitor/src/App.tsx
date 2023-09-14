@@ -24,7 +24,6 @@ type Dataset = {
   weight_cell_6: string;
 };
 
-// Defina o tipo de dados que corresponde ao seu componente CellTable
 type Data = {
   id: string;
   truckIdentifier: string;
@@ -40,9 +39,9 @@ type Data = {
 };
 
 function mapDatasetToData(dataset: Dataset[]): Data[] {
-  let idCounter = 0; // Inicializa um contador para criar IDs exclusivos
+  let idCounter = 0;
   return dataset.map((row) => ({
-    id: (idCounter++).toString(), // Cria um ID único incremental
+    id: (idCounter++).toString(),
     truckIdentifier: row.truck_id,
     cell1: parseFloat(row.weight_cell_1),
     cell2: parseFloat(row.weight_cell_2),
@@ -59,9 +58,8 @@ function mapDatasetToData(dataset: Dataset[]): Data[] {
 function App() {
   const [datasetData, setDatasetData] = useState<Data[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [latestData, setLatestData] = useState<Data | null>(null); // Para armazenar o dado mais recente
+  const [latestData, setLatestData] = useState<Data | null>(null);
 
-  // Configurar as credenciais e o cliente AWS IoT Analytics
   const iotAnalyticsClient = new IoTAnalyticsClient({
     region: 'us-east-1',
     credentials: {
@@ -70,9 +68,6 @@ function App() {
     },
   });
 
-  console.log(import.meta.env.VITE_ACCESS_KEY_ID, import.meta.env.VITE_SECRET_ACCESS_KEY);
-
-  // Função para obter o conteúdo do dataset
   async function getDatasetContent() {
     const params = {
       datasetName: 'esp32_analytics_dataset',
@@ -85,33 +80,30 @@ function App() {
       if (typeof dataUri === 'string') {
         const { data } = await axios.get(dataUri);
 
-        // Use o Papaparse para converter o CSV em JSON
         Papa.parse(data, {
           header: true,
           complete: function (result) {
             if (result.data) {
-              // Filtrar as linhas onde total_weight não é nulo e fazer a conversão para Data
               const filteredData = (result.data as Dataset[]).filter((row) => {
                 const totalWeightValue = parseFloat(row.total_weight);
                 return !isNaN(totalWeightValue) && totalWeightValue !== null;
               });
               const mappedData = mapDatasetToData(filteredData);
-              // Encontre o dado mais recente com base em row.dt
               const latestRow = mappedData.reduce((latest, current) => {
                 return latest.dt > current.dt ? latest : current;
               });
-              setLatestData(latestRow); // Define o dado mais recente
-              setDatasetData(mappedData); // Define o resultado filtrado e convertido para Data[]
-              setIsLoading(false); // Define como false após o carregamento bem-sucedido
+              setLatestData(latestRow);
+              setDatasetData(mappedData);
+              setIsLoading(false);
             } else {
               console.error('Erro ao analisar o CSV: Nenhum dado encontrado.');
-              setDatasetData([]); // Defina como um array vazio em caso de erro
-              setIsLoading(false); // Define como false em caso de erro
+              setDatasetData([]);
+              setIsLoading(false);
             }
           },
           error: function (error) {
             console.error('Erro ao analisar o CSV:', error);
-            setDatasetData([]); // Defina como um array vazio em caso de erro
+            setDatasetData([]);
           },
         });
       } else {
@@ -123,7 +115,7 @@ function App() {
   }
 
   useEffect(() => {
-    setIsLoading(true); // Define como true enquanto os dados estão sendo carregados
+    setIsLoading(true);
     getDatasetContent();
   }, []);
 
@@ -148,8 +140,8 @@ function App() {
         <Box sx={{ 
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center', // Centralize verticalmente
-          height: '100vh', // Defina uma altura para ocupar a tela inteira verticalmente
+          alignItems: 'center',
+          height: '100vh',
         }}>
           <CircularProgress />
         </Box>
