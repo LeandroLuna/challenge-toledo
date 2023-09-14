@@ -62,8 +62,8 @@ export default function CellConditions({ data }: CellConditionsProps) {
           ) : (
             <BatteryFullIcon sx={{ fontSize: 80, color: 'lime' }} />
           )}
-          <div className="cell-label">Cell {cell.cellId}</div>
-          <div className="cell-label">Weight {cellValues[cell.cellId - 1]}</div>
+          <div className="cell-label-weight">Weight: {cellValues[cell.cellId - 1]}</div>
+          <div className="cell-label-id">Cell {cell.cellId}</div>
         </div>
       ))}
     </div>
