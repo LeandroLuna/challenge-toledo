@@ -147,7 +147,7 @@ interface CellTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
-  data: Data[]; // Adicione esta propriedade
+  data: Data[];
 }
 
 function CellTableHead(props: CellTableProps) {
@@ -345,7 +345,7 @@ export default function CellTable({ data }: CellTableProps): JSX.Element {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id} // Use a propriedade 'id' como chave única
+                    key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >

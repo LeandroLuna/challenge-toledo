@@ -30,13 +30,10 @@ export default function CellConditions({ data }: CellConditionsProps) {
     return null;
   }
 
-  // Crie um array com os valores das células
   const cellValues = [data.cell1, data.cell2, data.cell3, data.cell4, data.cell5, data.cell6];
 
-  // Calcule a média dos valores das células
   const average = cellValues.reduce((acc, value) => acc + value, 0) / cellValues.length;
 
-  // Inicialize as células como não quebradas
   const cells: CellInfo[] = [
     { cellId: 1, isCellBroken: false },
     { cellId: 2, isCellBroken: false },
@@ -46,7 +43,6 @@ export default function CellConditions({ data }: CellConditionsProps) {
     { cellId: 6, isCellBroken: false },
   ];
 
-  // Verifique se alguma das células é significativamente diferente das outras
   for (let i = 0; i < cellValues.length; i++) {
     const currentValue = cellValues[i];
     const otherValues = cellValues.slice(0, i).concat(cellValues.slice(i + 1));
@@ -54,7 +50,6 @@ export default function CellConditions({ data }: CellConditionsProps) {
 
     if (Math.abs(currentValue - average) > maxDifference) {
       cells[i].isCellBroken = true;
-      break; // Se encontrarmos uma célula quebrada, podemos sair do loop
     }
   }
 
