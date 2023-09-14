@@ -25,49 +25,10 @@ interface Data {
   cell4: number;
   cell5: number;
   cell6: number;
-  avgWeight: number;
+  standardDeviation: number;
   totalWeight: number;
+  dt: string;
 }
-
-function createData(
-  id: string,
-  truckIdentifier: string,
-  cell1: number,
-  cell2: number,
-  cell3: number,
-  cell4: number,
-  cell5: number,
-  cell6: number,
-  avgWeight: number,
-  totalWeight: number,
-): Data {
-  return {
-    id,
-    truckIdentifier,
-    cell1,
-    cell2,
-    cell3,
-    cell4,
-    cell5,
-    cell6,
-    avgWeight,
-    totalWeight
-  };
-}
-
-const rows = [
-  createData('1', 'Truck1', 305, 3.7, 67, 4.3, 437, 18.0, 154.16, 835),
-  createData('2', 'Truck2', 452, 25.0, 51, 4.9, 360, 19.0, 101.62, 912.9),
-  createData('3', 'Truck1', 262, 16.0, 24, 6.0, 318, 0, 66.57, 626),
-  createData('4', 'Truck2', 159, 6.0, 24, 4.0, 392, 0.2, 56.57, 585.2),
-  createData('5', 'Truck1', 356, 16.0, 49, 3.9, 518, 26.0, 78.14, 968.9),
-  createData('6', 'Truck2', 408, 3.2, 87, 6.5, 26.0, 65, 82.83, 595.7),
-  createData('7', 'Truck2', 375, 0.0, 94, 0.0, 25.0, 51, 55.29, 545),
-  createData('8', 'Truck1', 518, 26.0, 65, 7.0, 3.9, 518, 97.00, 1138.9),
-  createData('9', 'Truck2', 392, 0.2, 98, 0.0, 375, 0.0, 49.40, 865.2),
-  createData('10', 'Truck1', 318, 0, 81, 2.0, 24, 4.0, 38.33, 429),
-  createData('11', 'Truck2', 360, 19.0, 9, 37.0, 3.7, 67,  93.47, 495.7),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -160,10 +121,10 @@ const headCells: readonly HeadCell[] = [
     label: 'cell6',
   },
   {
-    id: 'avgWeight',
+    id: 'standardDeviation',
     numeric: true,
     disablePadding: false,
-    label: 'AVG Weight',
+    label: 'STD Deviation',
   },
   {
     id: 'totalWeight',
@@ -171,6 +132,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Total Weight',
   },
+  {
+    id: 'dt',
+    numeric: true,
+    disablePadding: false,
+    label: 'Date',
+  }
 ];
 
 interface CellTableProps {
@@ -180,6 +147,7 @@ interface CellTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
+  data: Data[]; // Adicione esta propriedade
 }
 
 function CellTableHead(props: CellTableProps) {
@@ -276,7 +244,7 @@ function CellTableToolbar(props: CellTableToolbarProps) {
   );
 }
 
-export default function CellTable() {
+export default function CellTable({ data }: CellTableProps): JSX.Element {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('cell1');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -294,7 +262,7 @@ export default function CellTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.truckIdentifier);
+      const newSelected = data.map((n) => n.truckIdentifier);
       setSelected(newSelected);
       return;
     }
@@ -334,11 +302,11 @@ export default function CellTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(data, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
@@ -357,15 +325,16 @@ export default function CellTable() {
             size={'medium'}
           >
             <CellTableHead
+              data={data}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={data.length}
             />
             <TableBody>
-              {visibleRows.map((row: { id: string; truckIdentifier: string; cell1: any; cell2: any; cell3: any; cell4: any; cell5: any; cell6: any; avgWeight: any; totalWeight: any }, index: any) => {
+              {visibleRows.map((row: Data, index: number) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -376,7 +345,7 @@ export default function CellTable() {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={row.id} // Use a propriedade 'id' como chave única
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -403,8 +372,9 @@ export default function CellTable() {
                     <TableCell align="right">{row.cell4}</TableCell>
                     <TableCell align="right">{row.cell5}</TableCell>
                     <TableCell align="right">{row.cell6}</TableCell>
-                    <TableCell align="right">{row.avgWeight}</TableCell>
+                    <TableCell align="right">{row.standardDeviation}</TableCell>
                     <TableCell align="right">{row.totalWeight}</TableCell>
+                    <TableCell align="right">{new Date(parseInt(row.dt)).toLocaleString()}</TableCell>
                   </TableRow>
                 );
               })}
@@ -423,7 +393,7 @@ export default function CellTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
