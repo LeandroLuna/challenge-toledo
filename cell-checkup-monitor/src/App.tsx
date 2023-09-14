@@ -70,6 +70,8 @@ function App() {
     },
   });
 
+  console.log(import.meta.env.VITE_ACCESS_KEY_ID, import.meta.env.VITE_SECRET_ACCESS_KEY);
+
   // Função para obter o conteúdo do dataset
   async function getDatasetContent() {
     const params = {
