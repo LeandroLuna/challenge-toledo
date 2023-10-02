@@ -18,11 +18,11 @@ export type Data = {
   cell6: number;
   standardDeviation: number;
   totalWeight: number;
-  dt: string; // Adicione o campo dt aqui
+  dt: string;
 };
 
 interface CellConditionsProps {
-  data: Data | null; // Declare a prop 'data' do tipo Data ou null
+  data: Data | null;
 }
 
 export default function CellConditions({ data }: CellConditionsProps) {
