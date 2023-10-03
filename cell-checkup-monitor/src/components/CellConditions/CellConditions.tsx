@@ -1,6 +1,10 @@
 import BatteryAlertIcon from '@mui/icons-material/BatteryAlert';
 import BatteryFullIcon from '@mui/icons-material/BatteryFull';
 import './CellConditions.css';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface CellInfo {
   cellId: number;
@@ -26,6 +30,8 @@ interface CellConditionsProps {
 }
 
 export default function CellConditions({ data }: CellConditionsProps) {
+  const matches = useMediaQuery('(min-width : 600px)');
+
   if (!data) {
     return null;
   }
@@ -54,18 +60,22 @@ export default function CellConditions({ data }: CellConditionsProps) {
   }
 
   return (
-    <div className="battery-container">
-      {cells.map((cell) => (
-        <div key={cell.cellId} className="battery-icon">
-          {cell.isCellBroken ? (
-            <BatteryAlertIcon sx={{ fontSize: 80, color: 'red' }} />
-          ) : (
-            <BatteryFullIcon sx={{ fontSize: 80, color: 'lime' }} />
-          )}
-          <div className="cell-label-weight">Weight: {cellValues[cell.cellId - 1]}</div>
-          <div className="cell-label-id">Cell {cell.cellId}</div>
-        </div>
-      ))}
-    </div>
+      <ImageList sx={{ width: '100%' }} cols={matches ? 3 : 2} gap={10}>
+        {cells.map((cell) => (
+          <ImageListItem key={cell.cellId} sx={{ alignItems: 'center' }}>
+            {cell.isCellBroken ? (
+              <BatteryAlertIcon sx={{ fontSize: 80, color: 'red' }} />
+            ) : (
+              <BatteryFullIcon sx={{ fontSize: 80, color: 'lime' }} />
+            )}
+            <ImageListItemBar
+              sx={{ textAlign: 'center' }}
+              title={<span>Peso: {cellValues[cell.cellId - 1]}</span>}
+              subtitle={`Célula ${cell.cellId}`}
+              position="below"
+            />
+          </ImageListItem>
+        ))}
+      </ImageList>
   );
 }
