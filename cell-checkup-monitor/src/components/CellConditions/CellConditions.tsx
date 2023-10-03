@@ -69,7 +69,7 @@ export default function CellConditions({ data }: CellConditionsProps) {
               <BatteryFullIcon sx={{ fontSize: 80, color: 'lime' }} />
             )}
             <ImageListItemBar
-              sx={{ textAlign: 'center' }}
+              sx={{ textAlign: 'center', color: 'white' }}
               title={<span>Peso: {cellValues[cell.cellId - 1]}</span>}
               subtitle={`Célula ${cell.cellId}`}
               position="below"

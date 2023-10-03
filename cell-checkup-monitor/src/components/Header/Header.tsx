@@ -12,26 +12,20 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import Tooltip from '@mui/material/Tooltip';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const pages = [['Sobre', '/sobre']];
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { isDarkMode, setIsDarkMode } = useTheme();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -125,11 +119,11 @@ export default function Header() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Toggle dark mode">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <DarkModeIcon />
-              </IconButton>
-            </Tooltip>
+          <Tooltip title="Toggle dark mode">
+            <IconButton onClick={() => setIsDarkMode(!isDarkMode)} sx={{ p: 0 }}>
+              <DarkModeIcon />
+            </IconButton>
+          </Tooltip>
           </Box>
         </Toolbar>
       </Container>

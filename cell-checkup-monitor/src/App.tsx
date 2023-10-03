@@ -8,6 +8,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Header from './components/Header/Header.tsx';
 import Footer from './components/Footer/Footer.tsx';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useTheme } from './contexts/ThemeContext.tsx';
+import { lightTheme, darkTheme } from './themes/theme.tsx';
+
 
 type Dataset = {
   __dt: string;
@@ -60,6 +65,7 @@ function App() {
   const [datasetData, setDatasetData] = useState<Data[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [latestData, setLatestData] = useState<Data | null>(null);
+  const { isDarkMode } = useTheme();
 
   const iotAnalyticsClient = new IoTAnalyticsClient({
     region: 'us-east-1',
@@ -124,12 +130,15 @@ function App() {
     <>
       {!isLoading ? (
         <>
-          <Header/>
-          <Navigation
-          datasetData={datasetData}
-          latestData={latestData}
-          />
-          <Footer/>
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <CssBaseline />
+            <Header/>
+            <Navigation
+            datasetData={datasetData}
+            latestData={latestData}
+            />
+            <Footer/>
+          </ThemeProvider>
         </>
       ) : (
         <Box sx={{ 
