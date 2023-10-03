@@ -314,7 +314,7 @@ export default function CellTable({ data }: CellTableProps): JSX.Element {
   );
 
   return (
-      <Box sx={{ width: '100%', mb: 5 }}>
+      <Box sx={{ width: '100%', mb: {xs: 8, sm: 5 } }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <CellTableToolbar numSelected={selected.length} />
         <TableContainer>

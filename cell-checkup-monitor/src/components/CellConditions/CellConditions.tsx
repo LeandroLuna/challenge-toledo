@@ -60,7 +60,7 @@ export default function CellConditions({ data }: CellConditionsProps) {
   }
 
   return (
-      <ImageList sx={{ width: '100%' }} cols={matches ? 3 : 2} gap={10}>
+      <ImageList sx={{ width: '100%', mb: {xs: 8, sm: 'unset'} }} cols={matches ? 3 : 2} gap={10}>
         {cells.map((cell) => (
           <ImageListItem key={cell.cellId} sx={{ alignItems: 'center' }}>
             {cell.isCellBroken ? (
