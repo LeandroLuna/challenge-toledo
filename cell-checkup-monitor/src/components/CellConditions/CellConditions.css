@@ -1,9 +1,3 @@
-.battery-container{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2em;
-}
-
 .cell-label-id, .cell-label-weight{
     text-align: center;
     margin-top: 0.2em;
@@ -15,15 +9,4 @@
 
 .battery-icon{
     margin: 0 1em;
-}
-
-@media screen and (max-width: 750px) {
-    .battery-container{
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .battery-icon{
-        margin: 1em 0;
-    }
 }

@@ -82,7 +82,7 @@ const headCells: readonly HeadCell[] = [
     id: 'truckIdentifier',
     numeric: false,
     disablePadding: true,
-    label: 'Truck',
+    label: 'Caminhão',
   },
   {
     id: 'cell1',
@@ -124,19 +124,19 @@ const headCells: readonly HeadCell[] = [
     id: 'standardDeviation',
     numeric: true,
     disablePadding: false,
-    label: 'STD Deviation',
+    label: 'Desvio padrão',
   },
   {
     id: 'totalWeight',
     numeric: true,
     disablePadding: false,
-    label: 'Total Weight',
+    label: 'Peso total',
   },
   {
     id: 'dt',
     numeric: true,
     disablePadding: false,
-    label: 'Date',
+    label: 'Data',
   }
 ];
 
@@ -223,7 +223,7 @@ function CellTableToolbar(props: CellTableToolbarProps) {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          {numSelected} selecionada
         </Typography>
       ) : (
         <Typography
@@ -232,7 +232,7 @@ function CellTableToolbar(props: CellTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          Cells weight per truck
+          Peso das células por caminhão
         </Typography>
       )}
       {/* <Tooltip title="Filter list">
@@ -245,11 +245,11 @@ function CellTableToolbar(props: CellTableToolbarProps) {
 }
 
 export default function CellTable({ data }: CellTableProps): JSX.Element {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('cell1');
+  const [order, setOrder] = React.useState<Order>('desc');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('dt');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -314,8 +314,7 @@ export default function CellTable({ data }: CellTableProps): JSX.Element {
   );
 
   return (
-    <div className="table-container">
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', mb: 5 }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <CellTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -401,6 +400,5 @@ export default function CellTable({ data }: CellTableProps): JSX.Element {
         />
       </Paper>
     </Box>
-    </div>
   );
 }

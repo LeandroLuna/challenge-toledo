@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import CellTable from './components/CellTable/CellTable.tsx';
-import CellConditions from './components/CellConditions/CellConditions.tsx';
+import Navigation from './components/Navigation/Navigation.tsx';
 import { IoTAnalyticsClient, GetDatasetContentCommand } from '@aws-sdk/client-iotanalytics';
 import axios from 'axios';
 import Papa from 'papaparse'; 
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Header from './components/Header/Header.tsx';
+import Footer from './components/Footer/Footer.tsx';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useTheme } from './contexts/ThemeContext.tsx';
+import { lightTheme, darkTheme } from './themes/theme.tsx';
+
 
 type Dataset = {
   __dt: string;
@@ -59,6 +65,7 @@ function App() {
   const [datasetData, setDatasetData] = useState<Data[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [latestData, setLatestData] = useState<Data | null>(null);
+  const { isDarkMode } = useTheme();
 
   const iotAnalyticsClient = new IoTAnalyticsClient({
     region: 'us-east-1',
@@ -123,18 +130,15 @@ function App() {
     <>
       {!isLoading ? (
         <>
-          <h1>Cell Checkup Table</h1>
-          <CellTable
-            numSelected={0}
-            onRequestSort={() => {}}
-            onSelectAllClick={() => {}}
-            order="asc"
-            orderBy="cell1"
-            rowCount={datasetData.length}
-            data={datasetData}
-          />
-            <h2>Cell Health Conditions</h2>
-            <CellConditions data={latestData}/>
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <CssBaseline />
+            <Header/>
+            <Navigation
+            datasetData={datasetData}
+            latestData={latestData}
+            />
+            <Footer/>
+          </ThemeProvider>
         </>
       ) : (
         <Box sx={{ 
