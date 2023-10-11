@@ -1,6 +1,6 @@
 # Challenge Toledo (2023)
 
-![Representação do Unreal Engine para o Challenge Toledo](./PrototipoUnrealEngine.jpeg)
+![Representação do Unreal Engine para o Challenge Toledo](./images/PrototipoUnrealEngine.png)
 
 ## Descrição do Projeto
 
@@ -19,9 +19,10 @@ O projeto possui as seguintes funcionalidades principais:
 - **Conexão Serial**: A comunicação entre o ambiente virtual e o protótipo físico é estabelecida através da porta serial, utilizando o plugin Serial COM. Dados de sensores e comandos de controle são trocados em tempo real entre os dois sistemas.
 
 - **Visualização em Tempo Real**: As informações coletadas pelo protótipo físico são transmitidas para o ambiente virtual, permitindo a visualização em tempo real de dados como pesos medidos, status de dispositivos e outras informações relevantes.
+   ![Website Light](./images/WebsiteLight.png)
+   ![Website Dark](./images/WebsiteDark.png)
 
 - **Integração AWS**: Os dados de pesagem coletados pelo protótipo físico são enviados para a nuvem da AWS. No IoT Hub da AWS, os dados são redistribuídos entre diversos serviços, incluindo o IoT Analytics e o Quicksight, para análises e visualizações avançadas.
-
    ![Arquitetura AWS](./ArquiteturaAWS.png)
 
 - **Controle Remoto**: O ambiente virtual possibilita o controle remoto de atuadores no protótipo físico. Isso permite que os usuários testem diferentes cenários e modifiquem o comportamento do sistema físico de forma segura.
@@ -48,7 +49,7 @@ Para utilizar, siga os passos abaixo:
 
    - Montar o protótipo físico utilizando a plataforma ESP32 e os sensores necessários para a simulação de pesagem industrial.
    - Conectar os dispositivos físicos ao ESP32, garantindo que todos os componentes estejam funcionando corretamente.
-   ![Protótipo Fisico](./PrototipoFisico.jpeg)
+   ![Protótipo Fisico](./images/PrototipoFisico.png)
 
 2. **Preparação do Ambiente Virtual**:
 
@@ -65,6 +66,9 @@ Para utilizar, siga os passos abaixo:
    - Observar os dados coletados pelo protótipo físico sendo transmitidos para o ambiente virtual e, posteriormente, enviados para a AWS.
    - Utilizar os controles virtuais para interagir com o protótipo físico e avaliar sua resposta.
    - Acompanhar e analisar os dados coletados na AWS usando serviços como IoT Analytics e Quicksight.
+   ![Visualização Quicksight - 1](./images/WeightTruck.png)
+   ![Visualização Quicksight - 2](./images/WeightCell.png)
+   ![Visualização Quicksight - 3](./images/WeightCellPair.png)
    
 5. **Otimização e Melhoria**:
 
