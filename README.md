@@ -23,7 +23,7 @@ O projeto possui as seguintes funcionalidades principais:
    ![Website Dark](./images/WebsiteDark.png)
 
 - **Integração AWS**: Os dados de pesagem coletados pelo protótipo físico são enviados para a nuvem da AWS. No IoT Hub da AWS, os dados são redistribuídos entre diversos serviços, incluindo o IoT Analytics e o Quicksight, para análises e visualizações avançadas.
-   ![Arquitetura AWS](./ArquiteturaAWS.png)
+   ![Arquitetura AWS](./images/ArquiteturaAWS.png)
 
 - **Controle Remoto**: O ambiente virtual possibilita o controle remoto de atuadores no protótipo físico. Isso permite que os usuários testem diferentes cenários e modifiquem o comportamento do sistema físico de forma segura.
 
