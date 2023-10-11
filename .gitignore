@@ -1,0 +1,4 @@
+ESP32/AWS_IOT/*.pem
+ESP32/AWS_IOT/*.key
+ESP32/AWS_IOT/*.crt
+ESP32/AWS_IOT/Secrets.h
